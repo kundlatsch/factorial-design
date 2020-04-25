@@ -20,10 +20,7 @@ def effects_table_method(factors, results):
         for l in combinations(combination_string, i + 1)
     ]
 
-    factors_string = ""
-    for i in _combinations:
-        factors_string += i + " "
-    factors_string = factors_string[:-1]
+    factors_string = " ".join(_combinations)
     factorial_columns = pd.fracfact(factors_string)
 
     # Two to the power of factors
