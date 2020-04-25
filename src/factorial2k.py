@@ -1,10 +1,27 @@
 import pyDOE2 as pd
 import numpy as np
+from itertools import combinations
+import string
 
 
 def effects_table_method(factors, results):
+    combination_string = ""
+    for _, letter in zip(range(0, factors), string.ascii_lowercase):
+        combination_string += letter
+
+    _combinations = [
+        "".join(l)
+        for i in range(len(combination_string))
+        for l in combinations(combination_string, i + 1)
+    ]
+
+    factors_string = ""
+    for i in _combinations:
+        factors_string += i + " "
+    factors_string = factors_string[:-1]
+    factorial_columns = pd.fracfact(factors_string)
+
     image_column = np.ones((2 ** factors, 1))
-    factorial_columns = pd.fracfact("a b ab")
     results_column = np.array(results)
 
     sign_table = np.hstack((image_column, factorial_columns))
