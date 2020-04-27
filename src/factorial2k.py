@@ -4,12 +4,12 @@ from itertools import combinations
 import string
 
 
-def effects_table_method(factors, results):
-
+def create_sign_table(factors):
     # This combination string is used to create the factorial_string,
     # because pyDOE2 input is the comlumns that we want to create in
     # the signal table. Here we are using it to generate the 2k^N table,
     # so we need the combination of N comlumns.
+
     combination_string = ""
     for _, letter in zip(range(0, factors), string.ascii_lowercase):
         combination_string += letter
@@ -23,20 +23,31 @@ def effects_table_method(factors, results):
     factors_string = " ".join(_combinations)
     factorial_columns = pd.fracfact(factors_string)
 
-    # Two to the power of factors
-    tpf = 2 ** factors
-
-    image_column = np.ones((tpf, 1))
-    results_column = np.array(results)
-
+    image_column = np.ones((2 ** factors, 1))
     sign_table = np.hstack((image_column, factorial_columns))
+    return sign_table
 
-    total = [
+
+def effects_table_method(factors, results):
+    results_column = np.array(results)
+    sign_table = create_sign_table(factors)
+
+    tpf = 2 ** factors
+    coefficients = [
         float(np.dot(sign_table[:, i], results_column) / tpf) for i in range(tpf)
     ]
 
-    print(total)
-    return total
+    return coefficients
+
+
+def nonlinear_regression(coefficients, factors):
+    sign_table = create_sign_table(factors)
+    return [regression_eq(coefficients, r) for r in sign_table]
+
+
+def regression_eq(coefficients, independent_values):
+    map(lambda x: np.array(x), (independent_values, coefficients))
+    return sum(np.multiply(coefficients, independent_values))
 
 
 def variation_allocation(effects):
