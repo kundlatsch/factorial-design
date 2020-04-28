@@ -8,6 +8,8 @@ authors = ["kundlatsch <gustavo.kundlatsch@gmail.com>"]
 python = "^3.7"
 pyDOE2 = "^1.3.0"
 pytest = "^5.4.1"
+seaborn = "^0.10.1"
+pandas = "^1.0.3"
 
 [tool.poetry.dev-dependencies]
 

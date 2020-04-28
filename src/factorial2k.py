@@ -40,16 +40,6 @@ def effects_table_method(factors, results):
     return coefficients
 
 
-def nonlinear_regression(coefficients, factors):
-    sign_table = create_sign_table(factors)
-    return [regression_eq(coefficients, r) for r in sign_table]
-
-
-def regression_eq(coefficients, independent_values):
-    map(lambda x: np.array(x), (independent_values, coefficients))
-    return sum(np.multiply(coefficients, independent_values))
-
-
 def variation_allocation(effects):
     # The first elements represents q0, and is not important here
     effects.pop(0)
@@ -60,3 +50,18 @@ def variation_allocation(effects):
     percentages = [(100 * a) / total_variation for a in allocation]
 
     return percentages
+
+
+def get_residuals(results, effects, factors):
+    predicted_results = nonlinear_regression(effects, factors)
+    return [float(predicted_results[i] - results[i]) for i in range(len(results))]
+
+
+def nonlinear_regression(coefficients, factors):
+    sign_table = create_sign_table(factors)
+    return [regression_eq(coefficients, r) for r in sign_table]
+
+
+def regression_eq(coefficients, independent_values):
+    map(lambda x: np.array(x), (independent_values, coefficients))
+    return sum(np.multiply(coefficients, independent_values))
